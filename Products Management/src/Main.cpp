@@ -82,4 +82,5 @@ int main() {
 
     Population population(populationSize);
     population.run(generations, mutationRate, std::get<0>(createProductList()), std::get<1>(createProductList()), maxVolume);
+    return 0;
 }

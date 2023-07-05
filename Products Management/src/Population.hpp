@@ -14,6 +14,7 @@ class Population {
         ~Population() = default;
 
         void initializePopulation(std::vector<float> volumes, std::vector<float> prices, float maxVolume);
+        void updatePopulation();
         void orderPopulation();
         void bestIndividual(std::shared_ptr<Individual> individual);
         float fitnessTotal();

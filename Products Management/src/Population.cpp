@@ -16,7 +16,6 @@ void Population::initializePopulation(std::vector<float> volumes, std::vector<fl
         std::shared_ptr<Individual> individual = std::make_shared<Individual>(volumes, prices, maxVolume);
         _population.push_back(individual);
     }
-
     _bestIndividual = _population[0];
 }
 
@@ -49,18 +48,21 @@ std::shared_ptr<Individual> Population::selection(float fitnessTotal) {
     return _population[0];
 }
 
-void Population::run(int generations, float mutationRate, std::vector<float> volumes, std::vector<float> prices, float maxVolume) {
-    initializePopulation(volumes, prices, maxVolume);
+void Population::updatePopulation() {
     for (int i = 0; i < _populationSize; i++)
         _population[i]->fitness();
     orderPopulation();
     bestIndividual(_population[0]);
     printGeneration();
+}
 
+void Population::run(int generations, float mutationRate, std::vector<float> volumes, std::vector<float> prices, float maxVolume) {
+    initializePopulation(volumes, prices, maxVolume);
+    updatePopulation();
+    
     for (int i = 0; i < generations; i++) {
         std::vector<std::shared_ptr<Individual>> newPopulation;
         float totalFitness = fitnessTotal();
-
 
         for (int i = 0; i < _populationSize; i += 2) {
             std::shared_ptr<Individual> parent1 = selection(totalFitness);
@@ -71,23 +73,17 @@ void Population::run(int generations, float mutationRate, std::vector<float> vol
         }
 
         _population = newPopulation;
-        for (int i = 0; i < _populationSize; i++)
-            _population[i]->fitness();
-        orderPopulation();
-        bestIndividual(_population[0]);
-        printGeneration();
+        updatePopulation();
     }
 
-    // print best individual of all generations
     std::cout << "**************************" << std::endl;
     std::cout << "Best individual find in generation : " << _bestIndividual->getGeneration() << std::endl;
     std::cout << "Fitness: " << _bestIndividual->getFitness() << std::endl;
     std::cout << "Used volume: " << _bestIndividual->getUsedVolume() << std::endl;
-    std::cout << "Chromosome: ";
+    std::cout << "Chromosome: [";
     for (int i = 0; i < Cast(int, _bestIndividual->getChromosome().size()); i++)
-        std::cout << _bestIndividual->getChromosome()[i] << " ";
-    std::cout << std::endl;
-    std::cout << std::endl;
+        std::cout << _bestIndividual->getChromosome()[i];
+    std::cout << "]" << std::endl;
 }
 
 void Population::printGeneration() {
@@ -96,9 +92,9 @@ void Population::printGeneration() {
     std::cout << "Best individual: " << std::endl;
     std::cout << "Fitness: " << current->getFitness() << std::endl;
     std::cout << "Used volume: " << current->getUsedVolume() << std::endl;
-    std::cout << "Chromosome: ";
+    std::cout << "Chromosome: [";
     for (int i = 0; i < Cast(int, current->getChromosome().size()); i++)
-        std::cout << current->getChromosome()[i] << " ";
-    std::cout << std::endl;
+        std::cout << current->getChromosome()[i];
+    std::cout << "]" << std::endl;
     std::cout << std::endl;
 }
