@@ -25,7 +25,7 @@ CFLAGS = -W -Wall -Wextra -std=c++17
 LDFLAGS = -lboost_iostreams -lsfml-graphics -lsfml-window -lsfml-system
 
 # Change this to your program name
-NAME = ga
+NAME = TSP
 
 # Activate Debug mode (0 = OFF, 1 = ON)
 DEBUG = 0

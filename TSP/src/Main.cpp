@@ -42,12 +42,26 @@ std::vector<City> createCities(int nbCities) {
     return cities;
 }
 
-int main() {
-    std::vector<City> cities = createCities(50);
-
+int main(int ac, char **av) {
     float mutationRate = 0.001;
     int populationSize = 50;
-    int generations = 10000;
+    int generations = 500;
+    int nbCities = 20;
+
+    if (ac == 5) {
+        generations = std::stoi(av[1]);
+        populationSize = std::stoi(av[2]);
+        mutationRate = std::stof(av[3]);
+        nbCities = std::stoi(av[4]);
+    } else if (ac != 1) {
+        std::cerr << "Usage: ./TSP [generations] [populationSize] [mutationRate] [nbCities]" << std::endl;
+        std::cerr << "Example: ./TSP 500 50 0.001 20" << std::endl;
+        std::cerr << "No arguments will use default values list above" << std::endl;
+        return 84;
+    }
+
+    std::vector<City> cities = createCities(nbCities);
+
 
     std::shared_ptr<Population> population = std::make_shared<Population>(populationSize);
     sf::RenderWindow window(sf::VideoMode(400, 400), "TSP");
