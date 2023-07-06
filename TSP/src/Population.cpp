@@ -96,7 +96,7 @@ bool Population::run(int generations, float mutationRate, std::vector<City> citi
 
         Individual elite(_population[0]);
         _population = newPopulation;
-        _population.at(0) = std::make_shared<Individual>(elite);
+        _population.at(0) = std::make_shared<Individual>(elite)->mutation(mutationRate * 4);
         updatePopulation();
         updateWindow(_population[0], _bestIndividual, window, cities);
     }

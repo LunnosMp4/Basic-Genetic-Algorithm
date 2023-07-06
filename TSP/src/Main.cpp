@@ -43,11 +43,11 @@ std::vector<City> createCities(int nbCities) {
 }
 
 int main() {
-    std::vector<City> cities = createCities(20);
+    std::vector<City> cities = createCities(50);
 
-    float mutationRate = 0.1;
-    int populationSize = 30;
-    int generations = 100;
+    float mutationRate = 0.001;
+    int populationSize = 50;
+    int generations = 10000;
 
     std::shared_ptr<Population> population = std::make_shared<Population>(populationSize);
     sf::RenderWindow window(sf::VideoMode(400, 400), "TSP");
