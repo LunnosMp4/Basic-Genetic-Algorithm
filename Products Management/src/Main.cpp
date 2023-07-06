@@ -74,16 +74,7 @@ std::tuple<std::vector<float>, std::vector<float>> createProductList() {
     return std::make_tuple(volumes, prices);
 }
 
-int main() {
-    float maxVolume = 3;
-    float mutationRate = 0.01;
-    int populationSize = 20;
-    int generations = 100;
-
-    Population population(populationSize);
-    population.run(generations, mutationRate, std::get<0>(createProductList()), std::get<1>(createProductList()), maxVolume);
-
-    // Create a plot of the best solution for each generation
+void createPlot(int generations, Population population) {
     Gnuplot gp;
     std::vector<double> x_vals(generations + 1);
     std::vector<double> y_vals;
@@ -99,6 +90,17 @@ int main() {
     gp.send1d(boost::make_tuple(x_vals, y_vals));
     std::cout << "Press enter to exit." << std::endl;
     std::cin.get();
+}
 
+int main() {
+    float maxVolume = 3;
+    float mutationRate = 0.01;
+    int populationSize = 20;
+    int generations = 100;
+
+    Population population(populationSize);
+    population.run(generations, mutationRate, std::get<0>(createProductList()), std::get<1>(createProductList()), maxVolume);
+
+    createPlot(generations, population);
     return 0;
 }
