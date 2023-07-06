@@ -82,5 +82,23 @@ int main() {
 
     Population population(populationSize);
     population.run(generations, mutationRate, std::get<0>(createProductList()), std::get<1>(createProductList()), maxVolume);
+
+    // Create a plot of the best solution for each generation
+    Gnuplot gp;
+    std::vector<double> x_vals(generations + 1);
+    std::vector<double> y_vals;
+    
+    for (int i = 0; i <= generations; i++) {
+        x_vals[i] = i;
+        y_vals.push_back(population.getSolutions()[i]);
+    }
+    
+    gp << "set xrange [0:" << generations << "]\n";
+    gp << "set yrange [0:]\n";
+    gp << "plot '-' with linespoints title 'GA'\n";
+    gp.send1d(boost::make_tuple(x_vals, y_vals));
+    std::cout << "Press enter to exit." << std::endl;
+    std::cin.get();
+
     return 0;
 }

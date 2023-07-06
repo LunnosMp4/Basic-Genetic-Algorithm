@@ -23,8 +23,11 @@ class Population {
         void run(int generations, float mutationRate, std::vector<float> volumes, std::vector<float> prices, float maxVolume);
         void printGeneration();
 
+        std::vector<float> getSolutions() { return _solutions; }
+
     private:
         int _populationSize;
         std::vector<std::shared_ptr<Individual>> _population;
         std::shared_ptr<Individual> _bestIndividual;
+        std::vector<float> _solutions;
 };

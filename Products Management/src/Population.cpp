@@ -53,6 +53,7 @@ void Population::updatePopulation() {
         _population[i]->fitness();
     orderPopulation();
     bestIndividual(_population[0]);
+    _solutions.push_back(_bestIndividual->getFitness());
     printGeneration();
 }
 

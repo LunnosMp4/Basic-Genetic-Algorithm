@@ -21,6 +21,9 @@ INCLUDE_SOURCE = include
 # Add your flags here
 CFLAGS = -W -Wall -Wextra -std=c++17
 
+# Add your libraries here
+LDFLAGS = -lboost_iostreams
+
 # Change this to your program name
 NAME = ga
 

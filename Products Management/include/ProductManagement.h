@@ -12,6 +12,7 @@
 #include <random>
 #include <algorithm>
 #include <memory>
+#include "gnuplot-iostream.h"
 
 #define Cast(type, value) static_cast<type>(value)
 
