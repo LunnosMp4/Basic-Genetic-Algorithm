@@ -11,6 +11,8 @@ void updateWindow(std::shared_ptr<Individual> bestIndividual, std::shared_ptr<In
 Population::Population(int populationSize) : _populationSize(populationSize) {
     if (_populationSize <= 0)
         throw std::invalid_argument("Population size must be greater than 0");
+    if (_populationSize % 2 != 0)
+        throw std::invalid_argument("Population size must be even");
 }
 
 void Population::initializePopulation(std::vector<City> cities) {
@@ -63,11 +65,12 @@ void Population::updatePopulation() {
         _population[i]->fitness();
     orderPopulation();
 
-    // regenerate the last 5% of the population
     for (int i = _populationSize - Cast(int, _populationSize * 0.05); i < _populationSize; i++) {
         std::shared_ptr<Individual> last = _population[i]->mutation(1);
         _population[i] = last;
+        _population[i]->fitness();
     }
+    orderPopulation();
 
     bestIndividual(_population[0]);
     _solutions.push_back(_bestIndividual->getFitness());
@@ -90,7 +93,10 @@ bool Population::run(int generations, float mutationRate, std::vector<City> citi
             newPopulation.push_back(childrens[1]->mutation(mutationRate));
         }
 
+
+        Individual elite(_population[0]);
         _population = newPopulation;
+        _population.at(0) = std::make_shared<Individual>(elite);
         updatePopulation();
         updateWindow(_population[0], _bestIndividual, window, cities);
     }

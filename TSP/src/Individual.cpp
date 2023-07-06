@@ -32,37 +32,36 @@ std::vector<std::shared_ptr<Individual>> Individual::crossover(std::shared_ptr<I
     int startPos = getRandomInt(0, size - 1);
     int endPos = getRandomInt(0, size - 1);
 
-    if (startPos > endPos) {
+    if (startPos > endPos)
         std::swap(startPos, endPos);
-    }
 
     for (int i = startPos; i <= endPos; i++) {
         child1[i] = _chromosome[i];
         child2[i] = otherChromosome[i];
     }
 
-    int j = 0;
-    int k = 0;
+    int j = (endPos + 1) % size;
+    int k = (endPos + 1) % size;
     for (int i = 0; i < size; i++) {
         if (i < startPos || i > endPos) {
             while (std::find(child1.begin(), child1.end(), otherChromosome[j]) != child1.end()) {
-                j++;
+                j = (j + 1) % size;
             }
             child1[i] = otherChromosome[j];
 
             while (std::find(child2.begin(), child2.end(), _chromosome[k]) != child2.end()) {
-                k++;
+                k = (k + 1) % size;
             }
             child2[i] = _chromosome[k];
         }
     }
 
-    std::vector<std::shared_ptr<Individual>> childrens;
-    childrens.push_back(std::make_shared<Individual>(_cities, _generation + 1));
-    childrens.push_back(std::make_shared<Individual>(_cities, _generation + 1));
-    childrens[0]->setChromosome(child1);
-    childrens[1]->setChromosome(child2);
-    return childrens;
+    std::vector<std::shared_ptr<Individual>> children;
+    children.push_back(std::make_shared<Individual>(_cities, _generation + 1));
+    children.push_back(std::make_shared<Individual>(_cities, _generation + 1));
+    children[0]->setChromosome(child1);
+    children[1]->setChromosome(child2);
+    return children;
 }
 
 std::shared_ptr<Individual> Individual::mutation(float mutationRate) {
