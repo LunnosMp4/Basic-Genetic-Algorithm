@@ -6,6 +6,8 @@
 
 #include "Population.hpp"
 
+void updateWindow(std::shared_ptr<Individual> bestIndividual, std::shared_ptr<Individual> bestOAT, sf::RenderWindow& window, std::vector<City> cities);
+
 Population::Population(int populationSize) : _populationSize(populationSize) {
     if (_populationSize <= 0)
         throw std::invalid_argument("Population size must be greater than 0");
@@ -38,12 +40,20 @@ float Population::fitnessTotal() {
 }
 
 std::shared_ptr<Individual> Population::selection(float fitnessTotal) {
-    float random = getRandomFloat(0, fitnessTotal);
-    float sum = 0;
+    std::vector<float> selectionProbabilities;
     for (int i = 0; i < _populationSize; i++) {
-        sum += _population[i]->getFitness();
-        if (sum >= random)
+        float probability = static_cast<float>(i + 1) / _populationSize;
+        selectionProbabilities.push_back(probability);
+    }
+
+    float random = getRandomFloat(0, fitnessTotal);
+    float accumulatedProbability = 0;
+
+    for (int i = 0; i < _populationSize; i++) {
+        accumulatedProbability += selectionProbabilities[i];
+        if (accumulatedProbability >= random) {
             return _population[i];
+        }
     }
     return _population[0];
 }
@@ -53,16 +63,18 @@ void Population::updatePopulation() {
         _population[i]->fitness();
     orderPopulation();
 
-    // Regenerate the last individual
-    std::shared_ptr<Individual> last = _population[_populationSize - 1]->mutation(1);
-    _population[_populationSize - 1] = last;
+    // regenerate the last 5% of the population
+    for (int i = _populationSize - Cast(int, _populationSize * 0.05); i < _populationSize; i++) {
+        std::shared_ptr<Individual> last = _population[i]->mutation(1);
+        _population[i] = last;
+    }
 
     bestIndividual(_population[0]);
     _solutions.push_back(_bestIndividual->getFitness());
     printGeneration();
 }
 
-void Population::run(int generations, float mutationRate, std::vector<City> cities) {
+bool Population::run(int generations, float mutationRate, std::vector<City> cities, sf::RenderWindow& window) {
     initializePopulation(cities);
     updatePopulation();
 
@@ -80,11 +92,13 @@ void Population::run(int generations, float mutationRate, std::vector<City> citi
 
         _population = newPopulation;
         updatePopulation();
+        updateWindow(_population[0], _bestIndividual, window, cities);
     }
 
     std::cout << "**************************" << std::endl;
     std::cout << "Best individual find in generation : " << _bestIndividual->getGeneration() << std::endl;
     std::cout << "Fitness: " << _bestIndividual->getFitness() << std::endl;
+    return true;
 }
 
 void Population::printGeneration() {

@@ -5,9 +5,8 @@
 */
 
 #include "Population.hpp"
-#include "gnuplot-iostream.h"
-#include <SFML/Graphics.hpp>
 
+void updateWindow(std::shared_ptr<Individual> bestCurrent, std::shared_ptr<Individual> bestOAT, sf::RenderWindow& window, std::vector<City> cities);
 
 void createPlot(int generations, std::shared_ptr<Population> population) {
     Gnuplot gp;
@@ -27,73 +26,41 @@ void createPlot(int generations, std::shared_ptr<Population> population) {
     std::cin.get();
 }
 
-void drawCities(std::shared_ptr<Population> population, std::vector<City> cities) {
-    sf::RenderWindow window(sf::VideoMode(400, 400), "TSP", sf::Style::Close);
-    window.setFramerateLimit(60);
-    std::vector<sf::CircleShape> cityShapes;
-    for (auto city : cities) {
-        sf::CircleShape shape(5);
-        shape.setPosition(city.getX() - 5, city.getY() - 5);
-        shape.setFillColor(sf::Color::Red);
-        cityShapes.push_back(shape);
+std::vector<City> createCities(int nbCities) {
+    std::vector<City> cities;
+
+    int xMin = 20;
+    int xMax = 380;
+    int yMin = 60;
+    int yMax = 380;
+
+    for (int i = 0; i < nbCities; ++i) {
+        int x = getRandomInt(xMin, xMax);
+        int y = getRandomInt(yMin, yMax);
+        cities.push_back(City(x, y, i));
     }
-
-    while (window.isOpen()) {
-        sf::Event event;
-        while (window.pollEvent(event))
-            if (event.type == sf::Event::Closed)
-                window.close();
-
-        window.clear(sf::Color::White);
-
-        for (auto shape : cityShapes)
-            window.draw(shape);
-
-        std::vector<int> chromosome = population->getBestIndividual()->getChromosome();
-        for (int i = 0; i < Cast(int, chromosome.size()) - 1; i++) {
-            int city1 = chromosome[i];
-            int city2 = chromosome[i + 1];
-            sf::Vertex line[] = {
-                sf::Vertex(sf::Vector2f(cities[city1].getX(), cities[city1].getY()), sf::Color::Black),
-                sf::Vertex(sf::Vector2f(cities[city2].getX(), cities[city2].getY()), sf::Color::Black)
-            };
-            window.draw(line, 2, sf::Lines);
-        }
-        int lastCity = chromosome[chromosome.size() - 1];
-        int firstCity = chromosome[0];
-        sf::Vertex line[] = {
-            sf::Vertex(sf::Vector2f(cities[lastCity].getX(), cities[lastCity].getY()), sf::Color::Black),
-            sf::Vertex(sf::Vector2f(cities[firstCity].getX(), cities[firstCity].getY()), sf::Color::Black)
-        };
-        window.draw(line, 2, sf::Lines);
-
-        window.display();
-    }
+    return cities;
 }
 
 int main() {
-    std::vector<City> cities;
-    cities.push_back(City(60, 200, 0));
-    cities.push_back(City(180, 200, 1));
-    cities.push_back(City(80, 180, 2));
-    cities.push_back(City(140, 180, 3));
-    cities.push_back(City(20, 160, 4));
-    cities.push_back(City(100, 160, 5));
-    cities.push_back(City(200, 160, 6));
-    cities.push_back(City(140, 140, 7));
-    cities.push_back(City(40, 120, 8));
-    cities.push_back(City(100, 120, 9));
-    cities.push_back(City(180, 100, 10));
-    cities.push_back(City(60, 80, 11));
+    std::vector<City> cities = createCities(20);
 
     float mutationRate = 0.1;
     int populationSize = 20;
-    int generations = 100;
+    int generations = 1000;
 
     std::shared_ptr<Population> population = std::make_shared<Population>(populationSize);
-    population->run(generations, mutationRate, cities);
+    sf::RenderWindow window(sf::VideoMode(400, 400), "TSP");
 
-    drawCities(population, cities);
+    while (window.isOpen()) {
+        if (population->run(generations, mutationRate, cities, window) == true)
+            break;
+    }
+
+    while (window.isOpen()) {
+        updateWindow(population->getBestIndividual(), population->getBestIndividual(), window, cities);
+    }
+
     createPlot(generations, population);
 
     return 0;

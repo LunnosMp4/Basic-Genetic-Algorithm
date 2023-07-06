@@ -13,6 +13,11 @@
 #include <algorithm>
 #include <memory>
 #include <set>
+#include "gnuplot-iostream.h"
+#include <SFML/Graphics.hpp>
+#include <SFML/Window.hpp>
+#include <SFML/System.hpp>
+#include <thread>
 
 #define Cast(type, value) static_cast<type>(value)
 

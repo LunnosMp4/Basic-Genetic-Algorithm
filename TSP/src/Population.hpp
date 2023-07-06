@@ -20,7 +20,7 @@ class Population {
         float fitnessTotal();
         std::shared_ptr<Individual> selection(float fitnessTotal);
 
-        void run(int generations, float mutationRate, std::vector<City> cities);
+      bool run(int generations, float mutationRate, std::vector<City> cities, sf::RenderWindow& window);
         void printGeneration();
 
         std::vector<float> getSolutions() { return _solutions; }
