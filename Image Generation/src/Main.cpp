@@ -64,7 +64,7 @@ int main(int ac, char** av) {
         path = av[4];
     } else if (ac != 1) {
         std::cerr << "Usage: ./ImageGeneration [generations] [populationSize] [mutationRate] [path]" << std::endl;
-        std::cerr << "Example: ./ImageGeneration 500 50 0.01 resources/creeper.jpg" << std::endl;
+        std::cerr << "Example: ./ImageGeneration 100000 50 0.01 resources/creeper.jpg" << std::endl;
         std::cerr << "No arguments will use default values list above" << std::endl;
         return 84;
     }
