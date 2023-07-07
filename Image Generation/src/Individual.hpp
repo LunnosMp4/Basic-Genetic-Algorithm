@@ -25,9 +25,9 @@ class Individual {
         void setChromosome(std::vector<Color> chromosome) { _chromosome = chromosome; }
 
     private:
+        int _width;
+        int _height;
         int _generation;
         std::vector<Color> _chromosome;
         float _fitness;
-        int _width;
-        int _height;
 };

@@ -26,7 +26,7 @@ Individual::Individual(int width, int height, int generation) : _width(width), _
 
 void Individual::fitness(std::vector<Color> target) {
     float sumSquaredDiff = 0.0;
-    for (int i = 0; i < _chromosome.size(); i++) {
+    for (int i = 0; i < Cast(int, _chromosome.size()); i++) {
         float diffR = _chromosome[i].getR() - target[i].getR();
         float diffG = _chromosome[i].getG() - target[i].getG();
         float diffB = _chromosome[i].getB() - target[i].getB();
@@ -45,10 +45,8 @@ std::vector<std::shared_ptr<Individual>> Individual::crossover(std::shared_ptr<I
     child1.reserve(_chromosome.size());
     child2.reserve(_chromosome.size());
 
-    // Copy the genes from parents to children
     child1.insert(child1.end(), _chromosome.begin(), _chromosome.begin() + crossoverPoint);
     child1.insert(child1.end(), other->_chromosome.begin() + crossoverPoint, other->_chromosome.end());
-
     child2.insert(child2.end(), other->_chromosome.begin(), other->_chromosome.begin() + crossoverPoint);
     child2.insert(child2.end(), _chromosome.begin() + crossoverPoint, _chromosome.end());
 

@@ -50,12 +50,26 @@ void updateWindow(sf::RenderWindow& window, std::vector<Color> colorVector, int 
     window.display();
 }
 
-int main() {
+int main(int ac, char** av) {
     int width, height;
-    int generations = 100000;
     float mutationRate = 0.01;
     int populationSize = 50;
-    std::vector<Color> target = readImage("resources/creeper.jpg", &width, &height);
+    int generations = 100000;
+    std::string path = "resources/creeper.jpg";
+
+    if (ac == 5) {
+        generations = std::stoi(av[1]);
+        populationSize = std::stoi(av[2]);
+        mutationRate = std::stof(av[3]);
+        path = av[4];
+    } else if (ac != 1) {
+        std::cerr << "Usage: ./ImageGeneration [generations] [populationSize] [mutationRate] [path]" << std::endl;
+        std::cerr << "Example: ./ImageGeneration 500 50 0.01 resources/creeper.jpg" << std::endl;
+        std::cerr << "No arguments will use default values list above" << std::endl;
+        return 84;
+    }
+
+    std::vector<Color> target = readImage(path, &width, &height);
 
     std::shared_ptr<Population> population = std::make_shared<Population>(populationSize);
     sf::RenderWindow window(sf::VideoMode(width, height), "TSP");

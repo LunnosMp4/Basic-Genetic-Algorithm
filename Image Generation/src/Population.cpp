@@ -10,6 +10,8 @@ void updateWindow(sf::RenderWindow& window, std::vector<Color> colorVector, int 
 
 Population::Population(int populationSize) {
     _populationSize = populationSize;
+    if (_populationSize % 2 != 0)
+        _populationSize++;
 }
 
 void Population::initializePopulation(int width, int height) {
@@ -97,11 +99,11 @@ bool Population::run(int generations, float mutationRate, int width, int height,
             newPopulation.push_back(childrens[1]->mutation(mutationRate));
         }
 
-
         Individual elite(*_population[0]);
         _population = newPopulation;
         _population[0] = std::make_shared<Individual>(elite);
         updatePopulation();
+
         updateWindow(window, _bestIndividual->getChromosome(), width, height);
     }
 
