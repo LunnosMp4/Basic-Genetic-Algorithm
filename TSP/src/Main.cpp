@@ -43,7 +43,7 @@ std::vector<City> createCities(int nbCities) {
 }
 
 int main(int ac, char **av) {
-    float mutationRate = 0.001;
+    float mutationRate = 0.01;
     int populationSize = 50;
     int generations = 500;
     int nbCities = 20;
@@ -55,7 +55,7 @@ int main(int ac, char **av) {
         nbCities = std::stoi(av[4]);
     } else if (ac != 1) {
         std::cerr << "Usage: ./TSP [generations] [populationSize] [mutationRate] [nbCities]" << std::endl;
-        std::cerr << "Example: ./TSP 500 50 0.001 20" << std::endl;
+        std::cerr << "Example: ./TSP 500 50 0.01 20" << std::endl;
         std::cerr << "No arguments will use default values list above" << std::endl;
         return 84;
     }
